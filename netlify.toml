@@ -1,0 +1,3 @@
+[build]
+    functions = "dist"
+    command = "npm run build:lambda"

@@ -14,6 +14,7 @@ const T = new Twitter({
 var today = new Date();
 var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
 
+function handler ({headers, body}, context, callback) {
   let promise = new Promise((resolve, reject) => {
     base('Devtips').select({
       filterByFormula: `date = "${date}" `,
@@ -27,7 +28,7 @@ var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
   })
   
   promise.then(function(record) {
-    if(!(record.used == "true")) {
+    if(!(record.fields.used == "true")) {
       let id = record.id;
       let message = record.fields.message;
       let article = record.fields.article;
@@ -35,9 +36,12 @@ var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
       let tweet = `${message} ${article} ${tag}`;
       T.post('statuses/update', {status: tweet}, function(error, tweet, response) {
         if (!error) {
-          console.log(tweet);
           base('Devtips').update(id, {
             "used": "true"
+          })
+          callback(null,{
+            statusCode: 200,
+            body: "Success"
           })
         }
       });
@@ -46,3 +50,6 @@ var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
   .catch(function(error) {
     console.log('Error-->', error)
   })
+}
+
+exports.handler = handler;
