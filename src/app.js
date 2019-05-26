@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const Twitter = require('Twitter');
+const Twitter = require('twitter');
 const Airtable = require('airtable');
 const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE_KEY);
 
